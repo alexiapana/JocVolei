@@ -7,14 +7,14 @@ public class BluePlayerControl : MonoBehaviour
     [SerializeField]
     float _jumpForce = 3.0f;
     [SerializeField]
-    float _translationForce = 1.0f;
+    float _translationForce = 3.0f;
     Rigidbody _rigidBody;
 
     [SerializeField]
     private GameObject volleyball;
 
     [SerializeField]
-    private float hitForce = 10f;
+    private float hitForce = 15f;
 
     private int _jumpCount = 0;
     private int _maxJump = 2;
