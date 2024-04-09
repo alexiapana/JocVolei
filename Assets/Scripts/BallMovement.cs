@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class BallMovement : MonoBehaviour
 {
-    public float moveSpeed = 7f;
+    public float moveSpeed = 0.3f;
 
     private Rigidbody rb;
     private int scoreRed = 0;
@@ -19,47 +19,49 @@ public class BallMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>(); 
+        rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
-        
+
         scoreRed = PlayerPrefs.GetInt("ScoreRed", 0);
         scoreBlue = PlayerPrefs.GetInt("ScoreBlue", 0);
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
-    
+
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
             rb.isKinematic = false;
+
             Vector3 direction = (transform.position - collision.transform.position).normalized;
-            direction.z = 0; // Asigură-te că nu modifici axa Z
-            direction.y = 0; 
+            if (direction.x < 0)
+                direction.x = -moveSpeed;
+            else
+                direction.x = moveSpeed;
 
-            Vector3 verticalLift = Vector3.up * 2f;
+            direction.y = 1f;
+            direction.z = 0;
 
-            Vector3 horizontalForce = direction * moveSpeed;
-
-            rb.AddForce(horizontalForce + verticalLift, ForceMode.Impulse);
+            rb.AddForce(direction, ForceMode.Impulse);
 
         }
         if (collision.gameObject.CompareTag("Plane"))
         {
-            if (collision.transform.position.x < transform.position.x) 
+            if (collision.transform.position.x < transform.position.x)
             {
                 scoreBlue++;
                 Debug.Log("Scor Albastru: " + scoreBlue);
                 SaveScore();
                 SceneManager.LoadScene(sceneForBluePlayer);
             }
-            else 
-            { 
+            else
+            {
 
                 scoreRed++;
                 Debug.Log("Scor Rosu: " + scoreRed);
@@ -74,21 +76,21 @@ public class BallMovement : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Ground"))
         {
-            if (collision.transform.position.x < transform.position.x) 
+            if (collision.transform.position.x < transform.position.x)
             {
                 scoreRed++;
                 Debug.Log("Scor Rosu: " + scoreRed);
                 SaveScore();
                 SceneManager.LoadScene(sceneForRedPlayer);
             }
-            else 
+            else
             {
                 scoreBlue++;
                 Debug.Log("Scor Albastru: " + scoreBlue);
                 SaveScore();
                 SceneManager.LoadScene(sceneForBluePlayer);
-                
-                
+
+
             }
         }
     }
@@ -96,7 +98,7 @@ public class BallMovement : MonoBehaviour
     {
         PlayerPrefs.SetInt("ScoreRed", scoreRed);
         PlayerPrefs.SetInt("ScoreBlue", scoreBlue);
-        PlayerPrefs.Save(); 
+        PlayerPrefs.Save();
     }
 
     //private void OnApplicationQuit()

@@ -7,14 +7,14 @@ public class RedPlayerControl : MonoBehaviour
     [SerializeField]
     float _jumpForce = 4.0f;
     [SerializeField]
-    float _translationForce = 4.0f;
+    float _translationForce = 10.0f;
     Rigidbody _rigidBody;
 
     [SerializeField]
     private GameObject volleyball;
 
     [SerializeField]
-    private float hitForce = 10f;
+    public float moveSpeed = 3f;
 
     private int _jumpCount = 0;
     private int _maxJump = 2;
@@ -52,20 +52,24 @@ public class RedPlayerControl : MonoBehaviour
 
     void HitBall()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && IsBallClose())
+        if (Input.GetKeyDown(KeyCode.UpArrow) && IsBallClose())
         {
             Rigidbody ballRb = volleyball.GetComponent<Rigidbody>();
             if (ballRb != null && !ballRb.isKinematic)
             {
-                Vector3 direction = new Vector3(transform.forward.x, 1, 0).normalized;
-                ballRb.AddForce(direction * hitForce, ForceMode.Impulse);
+                Vector3 direction;
+                direction.x = -moveSpeed;
+                direction.y = 5f;
+                direction.z = 0;
+
+                ballRb.AddForce(direction, ForceMode.Impulse);
             }
         }
     }
 
     bool IsBallClose()
     {
-        float allowedDistance = 2f;
+        float allowedDistance = 7f;
         return Vector3.Distance(transform.position, volleyball.transform.position) <= allowedDistance;
     }
 
