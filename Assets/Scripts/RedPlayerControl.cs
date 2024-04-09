@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +9,12 @@ public class RedPlayerControl : MonoBehaviour
     [SerializeField]
     float _translationForce = 4.0f;
     Rigidbody _rigidBody;
+
+    [SerializeField]
+    private GameObject volleyball;
+
+    [SerializeField]
+    private float hitForce = 10f;
 
     private int _jumpCount = 0;
     private int _maxJump = 2;
@@ -23,6 +29,7 @@ public class RedPlayerControl : MonoBehaviour
     {
         MovePlayer();
         Jump();
+        HitBall();
     }
 
     void Jump()
@@ -42,6 +49,26 @@ public class RedPlayerControl : MonoBehaviour
         else if (Input.GetKey(KeyCode.RightArrow))
             transform.Translate(_translationForce * Time.deltaTime * -Vector3.right);
     }
+
+    void HitBall()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && IsBallClose())
+        {
+            Rigidbody ballRb = volleyball.GetComponent<Rigidbody>();
+            if (ballRb != null && !ballRb.isKinematic)
+            {
+                Vector3 direction = new Vector3(transform.forward.x, 1, 0).normalized;
+                ballRb.AddForce(direction * hitForce, ForceMode.Impulse);
+            }
+        }
+    }
+
+    bool IsBallClose()
+    {
+        float allowedDistance = 2f;
+        return Vector3.Distance(transform.position, volleyball.transform.position) <= allowedDistance;
+    }
+
 
     private void OnCollisionEnter(Collision other)
     {
