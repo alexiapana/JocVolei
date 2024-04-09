@@ -10,7 +10,8 @@ public class BallMovement : MonoBehaviour
     private Rigidbody rb;
     private int scoreRed = 0;
     private int scoreBlue = 0;
-
+    //PlayerPrefs.DeleteKey("ScoreRed");
+    //PlayerPrefs.DeleteKey("ScoreBlue");
     public string sceneForRedPlayer = "SecondScene";
     public string sceneForBluePlayer = "FirstScene";
 
@@ -20,8 +21,10 @@ public class BallMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>(); 
         rb.isKinematic = true;
+        
         scoreRed = PlayerPrefs.GetInt("ScoreRed", 0);
         scoreBlue = PlayerPrefs.GetInt("ScoreBlue", 0);
+        
     }
 
     // Update is called once per frame
@@ -29,7 +32,7 @@ public class BallMovement : MonoBehaviour
     {
         
     }
-
+    
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.CompareTag("Player"))
@@ -51,14 +54,16 @@ public class BallMovement : MonoBehaviour
             if (collision.transform.position.x < transform.position.x) 
             {
                 scoreBlue++;
-                SaveScore(); // Salvarea scorului
+                Debug.Log("Scor Albastru: " + scoreBlue);
+                SaveScore();
                 SceneManager.LoadScene(sceneForBluePlayer);
             }
             else 
             { 
 
                 scoreRed++;
-                SaveScore(); // Salvarea scorului
+                Debug.Log("Scor Rosu: " + scoreRed);
+                SaveScore();
                 SceneManager.LoadScene(sceneForRedPlayer);
             }
         }
@@ -69,17 +74,21 @@ public class BallMovement : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Ground"))
         {
-            if (collision.transform.position.x < transform.position.x) // Partea jucătorului roșu
+            if (collision.transform.position.x < transform.position.x) 
             {
                 scoreRed++;
+                Debug.Log("Scor Rosu: " + scoreRed);
                 SaveScore();
                 SceneManager.LoadScene(sceneForRedPlayer);
             }
-            else // Partea jucătorului albastru
+            else 
             {
                 scoreBlue++;
+                Debug.Log("Scor Albastru: " + scoreBlue);
                 SaveScore();
                 SceneManager.LoadScene(sceneForBluePlayer);
+                
+                
             }
         }
     }
@@ -89,8 +98,10 @@ public class BallMovement : MonoBehaviour
         PlayerPrefs.SetInt("ScoreBlue", scoreBlue);
         PlayerPrefs.Save(); 
     }
-    private void OnDestroy()
-    {
-        SaveScore();
-    }
+
+    //private void OnApplicationQuit()
+    //{
+    //    PlayerPrefs.DeleteKey("ScoreRed");
+    //    PlayerPrefs.DeleteKey("ScoreBlue");
+    //}
 }
