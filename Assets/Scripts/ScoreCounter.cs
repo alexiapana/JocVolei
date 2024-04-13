@@ -85,6 +85,6 @@ public class ScoreCounter : MonoBehaviour
     void UpdateScoreText()
     {
         RedScore.text = scoreRed.ToString();
-        BlueScore.text = scoreBlue.ToString()+ " - ";
+        BlueScore.text = scoreBlue.ToString();
     }
 }
