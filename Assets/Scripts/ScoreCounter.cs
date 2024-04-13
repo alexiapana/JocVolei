@@ -13,6 +13,8 @@ public class ScoreCounter : MonoBehaviour
     public string sceneForBluePlayer = "FirstScene";
     public TextMeshProUGUI RedScore;
     public TextMeshProUGUI BlueScore;
+    public TextMeshProUGUI winTextRed;
+    public TextMeshProUGUI winTextBlue;
 
     // Start is called before the first frame update
     void Start()
@@ -35,14 +37,14 @@ public class ScoreCounter : MonoBehaviour
             {
                 IncreaseBlueScore();
                 SaveScore();
-                SceneManager.LoadScene(sceneForBluePlayer);
+                ReloadSceneForBlue();
             }
             else
             {
 
                 IncreaseRedScore();
                 SaveScore();
-                SceneManager.LoadScene(sceneForRedPlayer);
+                ReloadSceneForRed();
             }
         }
 
@@ -53,16 +55,28 @@ public class ScoreCounter : MonoBehaviour
             {
                 IncreaseRedScore();
                 SaveScore();
-                SceneManager.LoadScene(sceneForRedPlayer);
+                ReloadSceneForRed();
             }
             else
             {
                 IncreaseBlueScore();
                 SaveScore();
-                SceneManager.LoadScene(sceneForBluePlayer);
+                ReloadSceneForBlue();
 
 
             }
+        }
+    }
+    private void CheckWinCondition()
+    {
+        if (scoreRed >= 10)
+        {
+            winTextRed.text = "Jucătorul roșu a câștigat!";
+            
+        }
+        else if (scoreBlue >= 10)
+        {
+            winTextBlue.text = "Jucătorul albastru a câștigat!";
         }
     }
     private void SaveScore()
@@ -75,16 +89,34 @@ public class ScoreCounter : MonoBehaviour
     {
         scoreRed++;
         UpdateScoreText();
+        CheckWinCondition();
     }
     private void IncreaseBlueScore() 
     {
         scoreBlue++;
         UpdateScoreText();
+        CheckWinCondition();
+
     }
 
-    void UpdateScoreText()
+    private void UpdateScoreText()
     {
         RedScore.text = scoreRed.ToString();
         BlueScore.text = scoreBlue.ToString();
     }
+    private void ReloadSceneForRed()
+    {
+        if (scoreRed<10)
+        {
+            SceneManager.LoadScene(sceneForRedPlayer);
+        }
+    }
+    private void ReloadSceneForBlue()
+    {
+        if (scoreBlue < 10)
+        {
+            SceneManager.LoadScene(sceneForBluePlayer);
+        }
+    }
+
 }
