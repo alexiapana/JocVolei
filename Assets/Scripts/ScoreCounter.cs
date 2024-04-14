@@ -41,7 +41,6 @@ public class ScoreCounter : MonoBehaviour
             }
             else
             {
-
                 IncreaseRedScore();
                 SaveScore();
                 ReloadSceneForRed();
